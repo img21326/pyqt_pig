@@ -33,8 +33,10 @@ class weight_device(object):
                 v = self.serial.readline().decode()
                 #print(v)
             except serial.SerialException:
+                self.connect = False
                 while self.connect != True:
-                    self.connect_serial
+                    self.connect_serial()
+                    time.sleep(3)
             try:
                 date_str = v.split('\r')[0]
                 date_str = dt.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")

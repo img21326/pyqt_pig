@@ -44,7 +44,12 @@ class RFID():
         return rfid
 
 if __name__ == "__main__":
-    rfid = RFID.get_instance()
+    import sys
+    try:
+        port = sys.argv[1]
+    except:
+        port = None
+    rfid = RFID.get_instance(port)
     print("RFID VERSION:")
     print(rfid.get_version())
 

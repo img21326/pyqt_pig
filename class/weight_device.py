@@ -6,26 +6,38 @@ class weight_device(object):
     ip = '0.0.0.0'
     port = 5000
     serial = None
+    com = None
     thread = None
     connect = False
 
     device_date = None
     device_val = None
 
-    def __init__(self,ip,port):
+    def __init__(self,ip = None,port = None,com = None):
         self.ip = ip
         self.port = port
+        self.com = com
     
     def connect_serial(self):
-        addr = self.ip + ":" + str(self.port)
-        try:
-            self.serial = serial.serial_for_url("socket://" + addr + "/logging=debug")
-            self.connect = True
-            return True
-        except:
-            self.serial = None
-            self.connect = False
-            return False
+        if self.com == None:
+            addr = self.ip + ":" + str(self.port)
+            try:
+                self.serial = serial.serial_for_url("socket://" + addr + "/logging=debug")
+                self.connect = True
+                return True
+            except:
+                self.serial = None
+                self.connect = False
+                return False
+        else:
+            try:
+                self.serial = serial.Serial(self.com)
+                self.connect = True
+                return True
+            except:
+                self.serial = None
+                self.connect = False
+                return False
     
     def listen(self):
         while self.serial != None:
@@ -55,15 +67,22 @@ class weight_device(object):
                 pass
             #else:
                 #print("not need val:" + v)
+                
+    def close(self):
+        self.serial.close()
 
             
             
 
 
 if __name__ == '__main__':
+    # _weight_device = weight_device(
+    #     ip = '192.168.1.100',
+    #     port = 50000
+    # )
+
     _weight_device = weight_device(
-        ip = '192.168.1.100',
-        port = 50000
+        com='COM4'
     )
     
     if (_weight_device.connect_serial()):

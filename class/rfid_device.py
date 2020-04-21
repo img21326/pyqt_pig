@@ -1,23 +1,42 @@
 import serial
 import time
 class RFID():
-    ser = None
+    ip = '0.0.0.0'
+    port = 5000
+    serial = None
+    com = None
+    thread = None
+    connect = False
 
     VER_COMMAND = [0x02,0xA4]
     READ_COMMAND = b'550D'
 
-    def __init__(self,port = None):
-        if port == None:
-            port = "/dev/tty.usbmodem201201011"
-        
-        try:
-            self.ser = serial.Serial(port)
-            print(self.ser)
-        except Exception as e:
-            print("connect port error:")
-            print(e)
-            exit()
+    def __init__(self,ip = None,port = None,com = None):
+        self.ip = ip
+        self.port = port
+        self.com = com
     
+    def connect_serial(self):
+        if self.com == None:
+            addr = self.ip + ":" + str(self.port)
+            try:
+                self.serial = serial.serial_for_url("socket://" + addr + "/logging=debug")
+                self.connect = True
+                return True
+            except:
+                self.serial = None
+                self.connect = False
+                return False
+        else:
+            try:
+                self.serial = serial.Serial(self.com)
+                self.connect = True
+                return True
+            except:
+                self.serial = None
+                self.connect = False
+                return False
+
     def get_version(self):
         r = self.write(self.VER_COMMAND)
         return r
@@ -28,32 +47,29 @@ class RFID():
         
 
     def write(self,command):
-        self.ser.write(command)
+        self.serial.write(command)
         time.sleep(1)
         r = []
-        while self.ser.in_waiting:
-            r.append(self.ser.read())
+        while self.serial.in_waiting:
+            r.append(self.serial.read())
         return r
 
     def close(self):
-        self.ser.close()
+        self.serial.close()
 
-    @staticmethod
-    def get_instance(port = None):
-        rfid = RFID(port)
-        return rfid
 
 if __name__ == "__main__":
     import sys
     try:
-        port = sys.argv[1]
+        com = sys.argv[1]
     except:
-        port = None
-    rfid = RFID.get_instance(port)
-    print("RFID VERSION:")
-    print(rfid.get_version())
+        com = None
+    rfid = RFID(com=com)
+    if rfid.connect_serial():
+        print("RFID VERSION:")
+        print(rfid.get_version())
 
-    print("RFID READ CARD:")
-    print(rfid.get_card()) 
+        print("RFID READ CARD:")
+        print(rfid.get_card()) 
 
-    rfid.close()
+        rfid.close()

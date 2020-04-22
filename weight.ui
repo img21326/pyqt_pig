@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>607</width>
-    <height>241</height>
+    <width>603</width>
+    <height>279</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>20</y>
-      <width>281</width>
-      <height>151</height>
+      <x>10</x>
+      <y>140</y>
+      <width>291</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="font">
@@ -35,24 +35,11 @@
     <property name="title">
      <string>秤重儀</string>
     </property>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>IP:</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>70</y>
+       <y>40</y>
        <width>111</width>
        <height>31</height>
       </rect>
@@ -65,7 +52,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>100</y>
+       <y>70</y>
        <width>81</width>
        <height>41</height>
       </rect>
@@ -74,24 +61,11 @@
       <string>Value:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="input_weight_ip_address">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>30</y>
-       <width>151</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>192.168.1.100:5000</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_weight_datetime">
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>70</y>
+       <y>40</y>
        <width>161</width>
        <height>31</height>
       </rect>
@@ -104,7 +78,7 @@
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>110</y>
+       <y>80</y>
        <width>161</width>
        <height>21</height>
       </rect>
@@ -120,7 +94,7 @@
       <x>10</x>
       <y>20</y>
       <width>291</width>
-      <height>151</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="font">
@@ -138,24 +112,11 @@
     <property name="title">
      <string>RFID</string>
     </property>
-    <widget class="QLabel" name="label_4">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>30</y>
-       <width>81</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>IP:</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>100</y>
+       <x>20</x>
+       <y>30</y>
        <width>81</width>
        <height>41</height>
       </rect>
@@ -164,24 +125,11 @@
       <string>UID:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="input_rfid_ip_address">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>30</y>
-       <width>161</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>192.168.1.101:5000</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_rfid_value">
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>110</y>
+       <x>140</x>
+       <y>40</y>
        <width>161</width>
        <height>21</height>
       </rect>
@@ -190,82 +138,41 @@
       <string>Unconnect</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_5">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>70</y>
-       <width>101</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>ScanTime:</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="input_rfid_ip_address_2">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>70</y>
-       <width>101</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>50</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
-       <x>230</x>
+       <x>20</x>
        <y>70</y>
-       <width>41</width>
-       <height>31</height>
+       <width>121</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
-      <string>ms</string>
+      <string>CountTime:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_rfid_value_2">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>80</y>
+       <width>161</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Unconnect</string>
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="start_button">
+   <widget class="QListView" name="listView">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>180</y>
-      <width>131</width>
-      <height>31</height>
+      <x>320</x>
+      <y>20</y>
+      <width>271</width>
+      <height>231</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>16</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Start</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="stop_button">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>180</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>16</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Stop</string>
     </property>
    </widget>
   </widget>

@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from weight_ui import Ui_MainWindow
 import sys
 import configparser
+from device_class.weight_device import Weight_Device,Weight_Thread
 
 class Config():
      API_URL = None
@@ -36,11 +37,23 @@ class MainWindow(QtWidgets.QMainWindow):
          super(MainWindow, self).__init__()
          self.ui = Ui_MainWindow()
          self.ui.setupUi(self)
+         
+         config = Config.get_instance()
+         self.weight_device = Weight_Device(ip = config.WEIGHT_IP,port = config.WEIGHT_PORT,com = config.WEIGHT_COM)
+
+         if (self.weight_device.connect_serial()):
+             self.weight_listen_thread = Weight_Thread(self.weight_device)
+             self.weight_listen_thread.update_date.connect(self.weight_update_date)
+             self.weight_listen_thread.update_val.connect(self.weight_update_value)
+             self.weight_listen_thread.start()
+
+     def weight_update_date(self,data):
+         self.ui.label_weight_datetime.setText(data)
+     def weight_update_value(self,data):
+         self.ui.label_weight_value.setText(str(data))
 
 
 if __name__ == '__main__':
-     config = Config.get_instance()
-
      app = QtWidgets.QApplication([])
      window = MainWindow()
      window.show()

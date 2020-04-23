@@ -41,11 +41,10 @@ class MainWindow(QtWidgets.QMainWindow):
          config = Config.get_instance()
          self.weight_device = Weight_Device(ip = config.WEIGHT_IP,port = config.WEIGHT_PORT,com = config.WEIGHT_COM)
 
-         if (self.weight_device.connect_serial()):
-             self.weight_listen_thread = Weight_Thread(self.weight_device)
-             self.weight_listen_thread.update_date.connect(self.weight_update_date)
-             self.weight_listen_thread.update_val.connect(self.weight_update_value)
-             self.weight_listen_thread.start()
+         self.weight_listen_thread = Weight_Thread(self.weight_device)
+         self.weight_listen_thread.update_date.connect(self.weight_update_date)
+         self.weight_listen_thread.update_val.connect(self.weight_update_value)
+         self.weight_listen_thread.start()
 
      def weight_update_date(self,data):
          self.ui.label_weight_datetime.setText(data)

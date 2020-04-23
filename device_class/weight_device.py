@@ -20,7 +20,7 @@ class Weight_Device(object):
         self.com = com
     
     def connect_serial(self):
-        if self.com == None:
+        if (self.ip != '') and (self.port != '') and (self.connect == False):
             addr = self.ip + ":" + str(self.port)
             try:
                 self.serial = serial.serial_for_url("socket://" + addr + "/logging=debug")
@@ -30,7 +30,7 @@ class Weight_Device(object):
                 self.serial = None
                 self.connect = False
                 return False
-        else:
+        elif (self.com != '') and (self.connect == False):
             try:
                 self.serial = serial.Serial(self.com)
                 self.connect = True
@@ -39,6 +39,10 @@ class Weight_Device(object):
                 self.serial = None
                 self.connect = False
                 return False
+        elif (self.connect == True):
+            return True
+        else:
+            return False
     
     def listen(self):
         pass
@@ -72,6 +76,8 @@ class Weight_Device(object):
 
     def close(self):
         self.serial.close()
+        self.connect = False
+        self.serial = None
 
 class Weight_Thread(QtCore.QThread):
     update_date = QtCore.pyqtSignal(str)
@@ -86,14 +92,17 @@ class Weight_Thread(QtCore.QThread):
         self.wait()
 
     def run(self):
-        while self.weight_device.serial != None:
+        while True:
+            if self.weight_device.connect_serial() == False:
+                print("not connect to weight device!")
+                time.sleep(3)
+                continue
             try:
                 v = self.weight_device.serial.readline().decode()
+                print(v)
             except serial.SerialException:
-                self.weight_device.connect = False
-                while self.weight_device.connect != True:
-                    self.weight_device.connect_serial()
-                    time.sleep(3)
+                self.weight_device.close()
+
             try:
                 date_str = v.split('\r')[0]
                 date_str = dt.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")

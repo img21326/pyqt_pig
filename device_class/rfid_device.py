@@ -1,8 +1,8 @@
 import serial
 import time
 class RFID():
-    ip = '0.0.0.0'
-    port = 5000
+    ip = None 
+    port = None 
     serial = None
     com = None
     thread = None

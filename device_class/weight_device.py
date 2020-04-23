@@ -4,8 +4,8 @@ import datetime as dt
 from PyQt5 import QtCore
 
 class Weight_Device(object):
-    ip = '0.0.0.0'
-    port = 5000
+    ip = None 
+    port = None 
     serial = None
     com = None
     thread = None
@@ -20,6 +20,7 @@ class Weight_Device(object):
         self.com = com
     
     def connect_serial(self):
+        self.close()
         if self.com == None:
             addr = self.ip + ":" + str(self.port)
             try:

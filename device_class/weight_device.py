@@ -8,7 +8,6 @@ class Weight_Device(object):
     port = None 
     serial = None
     com = None
-    thread = None
     connect = False
 
     device_date = None
@@ -28,6 +27,7 @@ class Weight_Device(object):
                 self.connect = True
                 return True
             except:
+                self.close()
                 self.serial = None
                 self.connect = False
                 return False
@@ -37,6 +37,7 @@ class Weight_Device(object):
                 self.connect = True
                 return True
             except:
+                self.close()
                 self.serial = None
                 self.connect = False
                 return False
@@ -72,16 +73,17 @@ class Weight_Device(object):
                 #print("not need val:" + v)
 
     def close(self):
-        self.serial.close()
+        if self.serial != None:
+            self.serial.close()
 
 class Weight_Thread(QtCore.QThread):
     update_date = QtCore.pyqtSignal(str)
     update_val = QtCore.pyqtSignal(int)
     weight_device = None
 
-    def __init__(self, weight_device):
+    def __init__(self, device):
         QtCore.QThread.__init__(self)
-        self.weight_device = weight_device
+        self.weight_device = device
 
     def __del__(self):
         self.wait()

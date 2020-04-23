@@ -1,15 +1,19 @@
 import serial
 import time
+from PyQt5 import QtCore
+
 class RFID():
-    ip = '0.0.0.0'
-    port = 5000
+    ip = None 
+    port = None 
     serial = None
     com = None
-    thread = None
     connect = False
 
     VER_COMMAND = [0x02,0xA4]
     READ_COMMAND = b'550D'
+
+    update_count = 0
+    update_uid = None
 
     def __init__(self,ip = None,port = None,com = None):
         self.ip = ip
@@ -17,6 +21,7 @@ class RFID():
         self.com = com
     
     def connect_serial(self):
+        self.close()
         if self.com == None:
             addr = self.ip + ":" + str(self.port)
             try:
@@ -55,7 +60,26 @@ class RFID():
         return r
 
     def close(self):
-        self.serial.close()
+        if self.serial != None:
+            self.serial.close()
+
+class RFID_Thread(QtCore.QThread):
+    update_count = QtCore.pyqtSignal(int)
+    update_uid = QtCore.pyqtSignal(str)
+    rfid_device = None
+
+    def __init__(self, device):
+        QtCore.QThread.__init__(self)
+        self.rfid_device = device
+
+    def __del__(self):
+        self.wait()
+
+    def run(self):
+        while self.rfid_device.serial != None:
+
+            self.update_count.emit(self.rfid_device.update_count)
+            self.update_uid.emit(self.rfid_device.update_uid)
 
 
 if __name__ == "__main__":

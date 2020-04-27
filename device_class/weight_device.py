@@ -1,49 +1,16 @@
-import serial
 import time
+import serial
 import datetime as dt
 from PyQt5 import QtCore
 
-class Weight_Device(object):
-    ip = None 
-    port = None 
-    serial = None
-    com = None
-    connect = False
+try:
+    from device_class.device import Device
+except:
+    from device import Device
 
+class Weight_Device(Device):
     device_date = None
     device_val = None
-
-    def __init__(self,ip = None,port = None,com = None):
-        self.ip = ip
-        self.port = port
-        self.com = com
-    
-    def connect_serial(self):
-        if (self.ip != '') and (self.port != '') and (self.connect == False):
-            addr = self.ip + ":" + str(self.port)
-            try:
-                self.serial = serial.serial_for_url("socket://" + addr + "/logging=debug")
-                self.connect = True
-                return True
-            except:
-                self.close()
-                self.serial = None
-                self.connect = False
-                return False
-        elif (self.com != '') and (self.connect == False):
-            try:
-                self.serial = serial.Serial(self.com)
-                self.connect = True
-                return True
-            except:
-                self.close()
-                self.serial = None
-                self.connect = False
-                return False
-        elif (self.connect == True):
-            return True
-        else:
-            return False
     
     def listen(self):
         pass
@@ -74,11 +41,6 @@ class Weight_Device(object):
         #         pass
             #else:
                 #print("not need val:" + v)
-
-    def close(self):
-        self.serial.close()
-        self.connect = False
-        self.serial = None
 
 class Weight_Thread(QtCore.QThread):
     update_date = QtCore.pyqtSignal(str)
@@ -115,7 +77,7 @@ class Weight_Thread(QtCore.QThread):
             try:
                 if ('kg' in v):
                     if ('-' in v):
-                        v = v.split('v')[1]
+                        v = v.split('-')[1]
                     kg = int(v.split(' ')[4].replace('.','').replace('kg\r\n',''))
                     self.weight_device.device_val = kg
                     #if (kg != 0):

@@ -8,10 +8,11 @@ try:
 except:
     from device import Device
 
+
 class Weight_Device(Device):
     device_date = None
     device_val = None
-    
+
     def listen(self):
         pass
         # while self.serial != None and self.serial.in_waiting:
@@ -39,8 +40,9 @@ class Weight_Device(Device):
         #                     print(kg)
         #     except:
         #         pass
-            #else:
-                #print("not need val:" + v)
+        # else:
+        #print("not need val:" + v)
+
 
 class Weight_Thread(QtCore.QThread):
     update_date = QtCore.pyqtSignal(str)
@@ -62,7 +64,6 @@ class Weight_Thread(QtCore.QThread):
                 continue
             try:
                 v = self.weight_device.serial.readline().decode()
-                print(v)
             except serial.SerialException:
                 self.weight_device.close()
 
@@ -78,20 +79,19 @@ class Weight_Thread(QtCore.QThread):
                 if ('kg' in v):
                     if ('-' in v):
                         v = v.split('-')[1]
-                    kg = int(v.split(' ')[4].replace('.','').replace('kg\r\n',''))
+                    kg = int(v.split(' ')[4].replace(
+                        '.', '').replace('kg\r\n', ''))
                     self.weight_device.device_val = kg
-                    #if (kg != 0):
+                    # if (kg != 0):
                     #    print(kg)
             except:
                 pass
             self.update_date.emit(self.weight_device.device_date)
             self.update_val.emit(self.weight_device.device_val)
-        #self.update.emit(100)
-        #for index in range(1, 101):
+        # self.update.emit(100)
+        # for index in range(1, 101):
         #    self.update.emit(index)
         #    time.sleep(0.5)
-
-            
 
 
 if __name__ == '__main__':
@@ -103,11 +103,10 @@ if __name__ == '__main__':
     _weight_device = Weight_Device(
         com='COM4'
     )
-    
+
     if (_weight_device.connect_serial()):
         print("ON connect")
         _weight_device.listen()
     else:
         print("Connect Error")
-
 

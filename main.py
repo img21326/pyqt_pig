@@ -31,8 +31,8 @@ class Config():
             self.RFID_PORT = config['CONFIG']['RFID_PORT']
             self.RFID_COM = config['CONFIG']['RFID_COM']
         except:
-            print("please init your env file")
-            exit()
+            print("please init your env file")                     
+            pass
 
     @staticmethod
     def get_instance():
@@ -56,7 +56,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.rfid_device.close()
         else:
             print("Connect Device Error!")
-            exit()
+            pass
 
         self.main_work_thread = MianWorkThread(
             self.weight_device, self.rfid_device)
@@ -72,6 +72,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def rfid_update_count(self, data):
         self.ui.label_rfid_value_2.setText(str(data))
+
     def rfid_update_uid(self, data):
         self.ui.label_rfid_value.setText(data)
 
@@ -108,19 +109,18 @@ class MianWorkThread(QtCore.QThread):
         self.wait()
 
     def run(self):
-        self.rfid_thread = threading.Thread(target = self.run_rfid_thread)
-        self.weight_thread = threading.Thread(target = self.run_weight_thread)
+        self.rfid_thread = threading.Thread(target=self.run_rfid_thread)
+        self.weight_thread = threading.Thread(target=self.run_weight_thread)
         self.rfid_thread.start()
         self.weight_thread.start()
         while True:
             self.update_uid.emit(self.rfid_device.update_uid)
             self.update_count.emit(self.rfid_device.update_count)
             # print(self.rfid_device.update_uid)
-            
+
             self.update_date.emit(self.weight_device.device_date)
             self.update_val.emit(self.weight_device.device_val)
             time.sleep(1)
-
 
     def run_rfid_thread(self):
         while True:
@@ -134,6 +134,7 @@ class MianWorkThread(QtCore.QThread):
 
     def run_weight_thread(self):
         self.weight_device.listen()
+
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])

@@ -4,6 +4,8 @@ import sys
 import configparser
 import time
 import threading
+import serial
+import datetime as dt
 from device_class.weight_device import Weight_Device
 from device_class.rfid_device import RFID
 
@@ -95,6 +97,7 @@ class MianWorkThread(QtCore.QThread):
 
     # tread
     rfid_thread = None
+    weight_thread = None
 
     def __init__(self, weight_device, rfid_device):
         QtCore.QThread.__init__(self)
@@ -106,31 +109,59 @@ class MianWorkThread(QtCore.QThread):
 
     def run(self):
         self.rfid_thread = threading.Thread(target = self.run_rfid_thread)
+        self.weight_thread = threading.Thread(target = self.run_weight_thread)
         self.rfid_thread.start()
+        self.weight_thread.start()
         while True:
             self.update_uid.emit(self.rfid_device.update_uid)
             self.update_count.emit(self.rfid_device.update_count)
             # print(self.rfid_device.update_uid)
-
-            if not (self.rfid_device.update_uid == 'None' or self.rfid_device.update_uid == None):
-                if (self.weight_device.connect_serial()):
-                    self.update_val.emit(1)
-                    self.update_date.emit(self.weight_device.device_date)
-            else:
-                self.weight_device.close()
-
+            
+            self.update_date.emit(self.weight_device.device_date)
+            self.update_val.emit(self.weight_device.device_val)
             time.sleep(1)
 
 
     def run_rfid_thread(self):
         while True:
             if self.rfid_device.connect_serial() == False:
-                print("not connect to weight device!")
+                print("not connect to rfid device!")
                 time.sleep(3)
                 continue
 
             self.rfid_device.get_card()
             time.sleep(1)
+
+    def run_weight_thread(self):
+        while True:
+            if (self.weight_device.connect_serial() == False):
+                print("not connect to weight device!")
+                time.sleep(3)
+                continue
+            try:
+                v = self.weight_device.serial.readline().decode()
+            except serial.SerialException:
+                self.weight_device.close()
+
+            try:
+                date_str = v.split('\r')[0]
+                date_str = dt.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+                self.weight_device.device_date = date_str.strftime("%H:%M:%S")
+                # print("date:" + self.device_date)
+            except Exception as err:
+                pass
+
+            try:
+                if ('kg' in v):
+                    if ('-' in v):
+                        v = v.split('-')[1]
+                    kg = int(v.split(' ')[4].replace(
+                        '.', '').replace('kg\r\n', ''))
+                    self.weight_device.device_val = kg
+                    # if (kg != 0):
+                    #    print(kg)
+            except:
+                pass
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])

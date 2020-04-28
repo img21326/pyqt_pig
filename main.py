@@ -133,35 +133,7 @@ class MianWorkThread(QtCore.QThread):
             time.sleep(1)
 
     def run_weight_thread(self):
-        while True:
-            if (self.weight_device.connect_serial() == False):
-                print("not connect to weight device!")
-                time.sleep(3)
-                continue
-            try:
-                v = self.weight_device.serial.readline().decode()
-            except serial.SerialException:
-                self.weight_device.close()
-
-            try:
-                date_str = v.split('\r')[0]
-                date_str = dt.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-                self.weight_device.device_date = date_str.strftime("%H:%M:%S")
-                # print("date:" + self.device_date)
-            except Exception as err:
-                pass
-
-            try:
-                if ('kg' in v):
-                    if ('-' in v):
-                        v = v.split('-')[1]
-                    kg = int(v.split(' ')[4].replace(
-                        '.', '').replace('kg\r\n', ''))
-                    self.weight_device.device_val = kg
-                    # if (kg != 0):
-                    #    print(kg)
-            except:
-                pass
+        self.weight_device.listen()
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])

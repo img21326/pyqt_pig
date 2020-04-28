@@ -14,36 +14,37 @@ class Weight_Device(Device):
     device_val = None
 
     def listen(self):
-        pass
-        # while self.serial != None and self.serial.in_waiting:
-        #     try:
-        #         v = self.serial.readline().decode()
-        #         #print(v)
-        #     except serial.SerialException:
-        #         self.connect = False
-        #         while self.connect != True:
-        #             self.connect_serial()
-        #             time.sleep(3)
-        #     try:
-        #         date_str = v.split('\r')[0]
-        #         date_str = dt.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-        #         self.device_date = date_str.strftime("%Y-%m-%d %H:%M:%S")
-        #         # print("date:" + self.device_date)
-        #     except Exception as err:
-        #         pass
+        while True:
+            if (self.connect_serial() == False):
+                print("not connect to weight device!")
+                time.sleep(3)
+                continue
+            try:
+                v = self.serial.readline().decode()
+            except serial.SerialException:
+                self.close()
 
-        #     try:
-        #         if ('kg' in v):
-        #                 kg = int(v.split(' ')[4].replace('.','').replace('kg\r\n',''))
-        #                 self.device_val = int(kg)
-        #                 if (kg != 0):
-        #                     print(kg)
-        #     except:
-        #         pass
-        # else:
-        #print("not need val:" + v)
+            try:
+                date_str = v.split('\r')[0]
+                date_str = dt.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+                self.device_date = date_str.strftime("%H:%M:%S")
+                # print("date:" + self.device_date)
+            except Exception as err:
+                pass
 
+            try:
+                if ('kg' in v):
+                    if ('-' in v):
+                        v = v.split('-')[1]
+                    kg = int(v.split(' ')[4].replace(
+                        '.', '').replace('kg\r\n', ''))
+                    self.device_val = kg
+                    # if (kg != 0):
+                    #    print(kg)
+            except:
+                pass
 
+## not used class
 class Weight_Thread(QtCore.QThread):
     update_date = QtCore.pyqtSignal(str)
     update_val = QtCore.pyqtSignal(int)

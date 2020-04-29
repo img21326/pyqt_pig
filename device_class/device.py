@@ -1,6 +1,6 @@
 import time
 import serial
-
+from logs.logger import log
 
 class Device():
     ip = None
@@ -15,14 +15,15 @@ class Device():
         self.com = com
 
     def connect_serial(self):
-        if (self.ip != '') and (self.port != '') and (self.connect == False):
+        if (self.ip != '' and self.ip != None) and (self.port != '' and self.port != None) and (self.connect == False):
             addr = self.ip + ":" + str(self.port)
             try:
                 self.serial = serial.serial_for_url(
                     "socket://" + addr + "/logging=debug")
                 self.connect = True
                 return True
-            except:
+            except Exception as e:
+                log('error', "Device.py :" + str(e))
                 self.close()
                 return False
         elif (self.com != '') and (self.connect == False):
@@ -31,7 +32,7 @@ class Device():
                 self.connect = True
                 return True
             except Exception as e:
-                print(e)
+                log('error', "Device.py :" + str(e))
                 self.close()
                 return False
         elif (self.connect == True):

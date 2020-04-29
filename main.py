@@ -69,7 +69,7 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             log('error', "can't connect device with serials!")
             print("Connect Device Error!")
-            pass
+            
 
         self.main_work_thread = MianWorkThread(
             self.weight_device, self.rfid_device)
@@ -135,10 +135,17 @@ class MianWorkThread(QtCore.QThread):
             self.update_val.emit(self.weight_device.device_val)
 
     def run_rfid_thread(self):
-        self.rfid_device.listen()
+        try:
+            self.rfid_device.listen()
+        except Exception as e:
+            log('error', "RFID Listen Error:" + str(e))
+            pass
 
     def run_weight_thread(self):
-        self.weight_device.listen()
+        try:
+            self.weight_device.listen()
+        except Exception as e:
+            log('error', "Weight Listen Error:" + str(e))
 
 
 if __name__ == '__main__':

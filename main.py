@@ -4,15 +4,17 @@ import sys
 import configparser
 import time
 import threading
-import logging
 import serial
 import datetime as dt
 from device_class.weight_device import Weight_Device
 from device_class.rfid_device import RFID
+from logs.logger import log
 
 
 class Config():
     API_URL = None
+    LOG_FILE = None
+    LOG_LEVEL = None
     WEIGHT_PORT = None
     WEIGHT_IP = None
     WEIGHT_COM = None
@@ -20,17 +22,25 @@ class Config():
     RFID_PORT = None
     RFID_COM = None
 
+    logging = None
+
     def __init__(self):
         config = configparser.ConfigParser()
         try:
             config.read('config.env')
             self.API_URL = config['CONFIG']['API_URL']
+            self.LOG_FILE = config['CONFIG']['LOG_FILE']
+            self.LOG_LEVEL = config['CONFIG']['LOG_LEVEL']
             self.WEIGHT_PORT = config['CONFIG']['WEIGHT_PORT']
             self.WEIGHT_IP = config['CONFIG']['WEIGHT_IP']
             self.WEIGHT_COM = config['CONFIG']['WEIGHT_COM']
             self.RFID_IP = config['CONFIG']['RFID_IP']
             self.RFID_PORT = config['CONFIG']['RFID_PORT']
             self.RFID_COM = config['CONFIG']['RFID_COM']
+
+            
+            log('debug', 'start config success')
+
         except:
             print("please init your env file")                     
             pass

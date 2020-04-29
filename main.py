@@ -4,6 +4,7 @@ import sys
 import configparser
 import time
 import threading
+import logging
 import serial
 import datetime as dt
 from device_class.weight_device import Weight_Device
@@ -120,7 +121,6 @@ class MianWorkThread(QtCore.QThread):
 
             self.update_date.emit(self.weight_device.device_date)
             self.update_val.emit(self.weight_device.device_val)
-            time.sleep(1)
 
     def run_rfid_thread(self):
         while True:

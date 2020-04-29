@@ -11,13 +11,16 @@ except:
 
 class Weight_Device(Device):
     device_date = None
-    device_val = None
+    device_val = 0
 
     def listen(self):
+        connect_count = 0
         while True:
             if (self.connect_serial() == False):
                 print("not connect to weight device!")
                 time.sleep(3)
+                continue
+            if not self.serial.in_waiting:
                 continue
             try:
                 v = self.serial.readline().decode()
@@ -43,6 +46,14 @@ class Weight_Device(Device):
                     #    print(kg)
             except:
                 pass
+
+            # 防止數據堵塞
+            if self.device_val == 0:
+                connect_count += 1
+            if (connect_count > 120):
+                connect_count = 0
+                self.close()
+                time.sleep(0.5)
 
 ## not used class
 class Weight_Thread(QtCore.QThread):
@@ -102,6 +113,8 @@ if __name__ == '__main__':
     # )
 
     _weight_device = Weight_Device(
+        ip='',
+        port='',
         com='COM4'
     )
 

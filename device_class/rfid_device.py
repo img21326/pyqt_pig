@@ -1,7 +1,7 @@
 import serial
 import time
 from PyQt5 import QtCore
-
+from logs.logger import log
 try:
     from device_class.device import Device
 except:
@@ -35,6 +35,18 @@ class RFID(Device):
             self.update_uid = s
             self.update_count += 1
             return s
+
+    def listen(self):
+        while True:
+            if self.connect_serial() == False:
+                log('error', "not connect to rfid device!")
+                print("not connect to rfid device!")
+                time.sleep(3)
+                continue
+
+            self.get_card()
+            log('debug', "get card code:" + self.update_uid)
+            time.sleep(0.5)
 
 
 if __name__ == "__main__":

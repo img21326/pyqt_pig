@@ -34,3 +34,7 @@ def log(level, s):
 
     if level == 'debug':
         logger.debug(s)
+    if level == 'info':
+        logger.info(s)
+    if level == 'error':
+        logger.error(s)

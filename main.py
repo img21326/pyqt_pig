@@ -42,6 +42,7 @@ class Config():
             log('debug', 'start config success')
 
         except:
+            log('error', 'please init your env file')
             print("please init your env file")                     
             pass
 
@@ -66,6 +67,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.weight_device.close()
             self.rfid_device.close()
         else:
+            log('error', "can't connect device with serials!")
             print("Connect Device Error!")
             pass
 
@@ -133,14 +135,7 @@ class MianWorkThread(QtCore.QThread):
             self.update_val.emit(self.weight_device.device_val)
 
     def run_rfid_thread(self):
-        while True:
-            if self.rfid_device.connect_serial() == False:
-                print("not connect to rfid device!")
-                time.sleep(3)
-                continue
-
-            self.rfid_device.get_card()
-            time.sleep(1)
+        self.rfid_device.listen()
 
     def run_weight_thread(self):
         self.weight_device.listen()

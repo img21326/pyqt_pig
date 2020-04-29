@@ -2,7 +2,7 @@ import time
 import serial
 import datetime as dt
 from PyQt5 import QtCore
-
+from logs.logger import log
 try:
     from device_class.device import Device
 except:
@@ -17,6 +17,7 @@ class Weight_Device(Device):
         connect_count = 0
         while True:
             if (self.connect_serial() == False):
+                log('error', "not connect to weight device!")
                 print("not connect to weight device!")
                 time.sleep(3)
                 continue
@@ -25,12 +26,14 @@ class Weight_Device(Device):
             try:
                 v = self.serial.readline().decode()
             except serial.SerialException:
+                log('error', "weight device : SerialException!")
                 self.close()
 
             try:
                 date_str = v.split('\r')[0]
                 date_str = dt.datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
                 self.device_date = date_str.strftime("%H:%M:%S")
+                log('debug', "weight device date : " + (self.device_date))
                 # print("date:" + self.device_date)
             except Exception as err:
                 pass
@@ -44,8 +47,12 @@ class Weight_Device(Device):
                     self.device_val = kg
                     # if (kg != 0):
                     #    print(kg)
-            except:
+                    log('debug', "weight device val : " + str(self.device_val))
+            except Exception as e:
+                log('error', "weight val error:" + str(e))
                 pass
+            
+            
 
             # 防止數據堵塞
             if self.device_val == 0:
@@ -53,6 +60,7 @@ class Weight_Device(Device):
             if (connect_count > 120):
                 connect_count = 0
                 self.close()
+                log('debug', "weight device : reconnect" )
                 time.sleep(0.5)
 
 ## not used class

@@ -57,11 +57,10 @@ class Weight_Device(Device):
             # 防止數據堵塞
             if self.device_val == 0:
                 connect_count += 1
-            if (connect_count > 120):
+            if (connect_count > 60):
                 connect_count = 0
                 self.close()
                 log('debug', "weight device : reconnect" )
-                time.sleep(0.5)
 
 ## not used class
 class Weight_Thread(QtCore.QThread):

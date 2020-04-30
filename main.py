@@ -134,6 +134,8 @@ class MianWorkThread(QtCore.QThread):
             self.update_date.emit(self.weight_device.device_date)
             self.update_val.emit(self.weight_device.device_val)
 
+            time.sleep(1.2)
+
     def run_rfid_thread(self):
         try:
             self.rfid_device.listen()

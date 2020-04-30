@@ -2,3 +2,8 @@ __pycache__
 __pycache__/*
 config.env
 log.txt
+build
+build/*
+dist
+dist/*
+main.spec

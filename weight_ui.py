@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(603, 279)
+        MainWindow.resize(766, 279)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
@@ -58,7 +58,7 @@ class Ui_MainWindow(object):
         self.label_rfid_value_2.setText("")
         self.label_rfid_value_2.setObjectName("label_rfid_value_2")
         self.tableView = QtWidgets.QTableView(self.centralwidget)
-        self.tableView.setGeometry(QtCore.QRect(310, 20, 281, 231))
+        self.tableView.setGeometry(QtCore.QRect(310, 20, 441, 231))
         self.tableView.setObjectName("tableView")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)

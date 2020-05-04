@@ -52,10 +52,15 @@ class Config():
 
 
 class MainWindow(QtWidgets.QMainWindow):
+    table_model = []
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        self.model= QtGui.QStandardItemModel(10,4)
+        self.model.setHorizontalHeaderLabels(['UID','IN_TIME','OUT_TIME','VAL'])
+        self.ui.tableView.setModel(self.model)
 
         config = Config.get_instance()
         self.weight_device = Weight_Device(
@@ -77,6 +82,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.main_work_thread.update_count.connect(self.rfid_update_count)
         self.main_work_thread.update_val.connect(self.weight_update_value)
         self.main_work_thread.update_date.connect(self.weight_update_date)
+        self.main_work_thread.update_table.connect(self.update_table)
         self.main_work_thread.start()
         # self.weight_listen_thread = Weight_Thread(self.weight_device)
         # self.weight_listen_thread.update_date.connect(self.weight_update_date)
@@ -94,7 +100,31 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def weight_update_value(self, data):
         self.ui.label_weight_value.setText(str(data))
+    
+    def update_table(self, obj):
+        self.table_model.append(obj)
 
+        if (len(self.table_model) > 10):
+            self.table_model.pop(0)
+
+        reversed_arr = self.table_model[::-1]
+
+        for i,obj in enumerate(reversed_arr):
+            in_time = QtGui.QStandardItem(obj.in_time)
+            out_time = QtGui.QStandardItem(obj.out_time)
+            tag_id = QtGui.QStandardItem(obj.tag_id)
+            eat_val = QtGui.QStandardItem(obj.eat_val)
+            self.model.setItem(i,0,tag_id)
+            self.model.setItem(i,1,in_time)
+            self.model.setItem(i,2,out_time)
+            self.model.setItem(i,3,eat_val)
+        self.ui.tableView.setModel(self.model)
+
+class PigData():
+    in_time = None
+    out_time = None
+    eat_val = None
+    tag_id = None
 
 class MianWorkThread(QtCore.QThread):
     # weight
@@ -104,6 +134,9 @@ class MianWorkThread(QtCore.QThread):
     # rfid
     update_count = QtCore.pyqtSignal(int)
     update_uid = QtCore.pyqtSignal(str)
+
+    # table
+    update_table = QtCore.pyqtSignal(object)
 
     # device
     weight_device = None
@@ -126,13 +159,29 @@ class MianWorkThread(QtCore.QThread):
         self.weight_thread = threading.Thread(target=self.run_weight_thread)
         self.rfid_thread.start()
         self.weight_thread.start()
+
+        # rfid_onload = False
+        pig_data = None
+
         while True:
             self.update_uid.emit(self.rfid_device.update_uid)
             self.update_count.emit(self.rfid_device.update_count)
             # print(self.rfid_device.update_uid)
 
+            if (self.rfid_device.update_uid != "None" and self.rfid_device.update_uid != None and pig_data == None): # 刷入
+                pig_data = PigData()
+                pig_data.in_time = dt.datetime.now().strftime("%H:%M:%S")
+                pig_data.tag_id = self.rfid_device.update_uid
+
+            if (self.rfid_device.update_uid == "None" and pig_data != None): # 刷出
+                pig_data.out_time = dt.datetime.now().strftime("%H:%M:%S")
+                self.update_table.emit(pig_data)
+                pig_data = None
+
             self.update_date.emit(self.weight_device.device_date)
             self.update_val.emit(self.weight_device.device_val)
+
+            # self.update_table.emit(self.weight_device.device_val)
 
             time.sleep(1.2)
 

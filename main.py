@@ -173,9 +173,14 @@ class MianWorkThread(QtCore.QThread):
                 pig_data.in_time = dt.datetime.now().strftime("%H:%M:%S")
                 pig_data.tag_id = self.rfid_device.update_uid
 
+                log('info', "uid:" + str(pig_data.tag_id) + " get inside")
+
             if (self.rfid_device.update_uid == "None" and pig_data != None): # 刷出
                 pig_data.out_time = dt.datetime.now().strftime("%H:%M:%S")
                 self.update_table.emit(pig_data)
+
+                log('info', "uid:" + str(pig_data.tag_id) + " get out, eat value: " + str(pig_data.eat_val))
+
                 pig_data = None
 
             self.update_date.emit(self.weight_device.device_date)

@@ -33,8 +33,11 @@ class RFID(Device):
                 if ch == '\n' or ord(ch) == 13:
                     continue
                 s = s + ch
+            if self.update_uid == s:
+                self.update_count += 1
+            else:
+                self.update_count = 0
             self.update_uid = s
-            self.update_count += 1
             return s
 
     def listen(self):
@@ -47,7 +50,7 @@ class RFID(Device):
 
             self.get_card()
             log('debug', "get card code:" + self.update_uid)
-            time.sleep(2)
+            time.sleep(0.1)
 
 
 if __name__ == "__main__":

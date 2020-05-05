@@ -49,7 +49,7 @@ class Weight_Device(Device):
                     #    print(kg)
                     log('debug', "weight device val : " + str(self.device_val))
             except Exception as e:
-                log('error', "weight val error:" + str(e))
+                log('debug', "weight val error:" + str(e))
                 pass
             
             

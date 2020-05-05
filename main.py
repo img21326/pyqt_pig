@@ -168,18 +168,24 @@ class MianWorkThread(QtCore.QThread):
             self.update_count.emit(self.rfid_device.update_count)
             # print(self.rfid_device.update_uid)
 
-            if (self.rfid_device.update_uid != "None" and self.rfid_device.update_uid != None and pig_data == None): # 刷入
+            if ((self.rfid_device.update_uid != "None" and self.rfid_device.update_uid != None) and pig_data == None): # 刷入
                 pig_data = PigData()
                 pig_data.in_time = dt.datetime.now().strftime("%H:%M:%S")
                 pig_data.tag_id = self.rfid_device.update_uid
 
-                log('info', "uid:" + str(pig_data.tag_id) + " get inside")
+                log('info', "get inside uid:" + str(pig_data.tag_id))
 
-            if (self.rfid_device.update_uid == "None" and pig_data != None): # 刷出
+            change_pig = False
+            if (pig_data != None):
+                if (pig_data.tag_id != self.rfid_device.update_uid):
+                    change_pig = True
+                
+            if ((self.rfid_device.update_uid == "None" or change_pig) and pig_data != None): # 刷出
                 pig_data.out_time = dt.datetime.now().strftime("%H:%M:%S")
+                pig_data.eat_val = str(self.weight_device.device_val)
                 self.update_table.emit(pig_data)
 
-                log('info', "uid:" + str(pig_data.tag_id) + " get out, eat value: " + str(pig_data.eat_val))
+                log('info', "get out uid:" + str(pig_data.tag_id) + ", eat value: " + str(pig_data.eat_val))
 
                 pig_data = None
 
@@ -188,7 +194,7 @@ class MianWorkThread(QtCore.QThread):
 
             # self.update_table.emit(self.weight_device.device_val)
 
-            time.sleep(1.2)
+            time.sleep(1/23)
 
     def run_rfid_thread(self):
         try:

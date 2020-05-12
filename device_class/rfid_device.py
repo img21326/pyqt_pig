@@ -22,6 +22,7 @@ class RFID(Device):
 
     def get_card(self):
         r = self.write(self.READ_COMMAND)
+        print(r)
         if (len(r) == 4):
             self.update_uid = "None"
             self.update_count = 0
@@ -50,7 +51,7 @@ class RFID(Device):
 
             self.get_card()
             log('debug', "get card code:" + self.update_uid)
-            time.sleep(0.1)
+            time.sleep(0.5)
 
 
 if __name__ == "__main__":

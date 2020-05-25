@@ -52,15 +52,19 @@ class Config():
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    table_model = []
+    table_food_model = []
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.model= QtGui.QStandardItemModel(10,4)
-        self.model.setHorizontalHeaderLabels(['UID','IN_TIME','OUT_TIME','VAL'])
-        self.ui.tableView.setModel(self.model)
+        self.food_model= QtGui.QStandardItemModel(10,4)
+        self.food_model.setHorizontalHeaderLabels(['UID','IN_TIME','OUT_TIME','VAL'])
+        self.ui.tableView.setModel(self.food_model)
+
+        self.water_model= QtGui.QStandardItemModel(10,4)
+        self.water_model.setHorizontalHeaderLabels(['UID','IN_TIME','OUT_TIME','VAL'])
+        self.ui.tableView_2.setModel(self.water_model)
 
         config = Config.get_instance()
         self.weight_device = Weight_Device(
@@ -76,23 +80,23 @@ class MainWindow(QtWidgets.QMainWindow):
             print("Connect Device Error!")
             
 
-        self.main_work_thread = FoodWorkThread(
+        self.food_work_thread = FoodWorkThread(
             self.weight_device, self.food_rfid_device)
-        self.main_work_thread.update_uid.connect(self.rfid_update_uid)
-        self.main_work_thread.update_count.connect(self.rfid_update_count)
-        self.main_work_thread.update_val.connect(self.weight_update_value)
-        self.main_work_thread.update_date.connect(self.weight_update_date)
-        self.main_work_thread.update_table.connect(self.update_table)
-        self.main_work_thread.start()
+        self.food_work_thread.update_uid.connect(self.food_rfid_update_uid)
+        self.food_work_thread.update_count.connect(self.food_rfid_update_count)
+        self.food_work_thread.update_val.connect(self.weight_update_value)
+        self.food_work_thread.update_date.connect(self.weight_update_date)
+        self.food_work_thread.update_table.connect(self.food_update_table)
+        self.food_work_thread.start()
         # self.weight_listen_thread = Weight_Thread(self.weight_device)
         # self.weight_listen_thread.update_date.connect(self.weight_update_date)
         # self.weight_listen_thread.update_val.connect(self.weight_update_value)
         # self.weight_listen_thread.start()
 
-    def rfid_update_count(self, data):
+    def food_rfid_update_count(self, data):
         self.ui.label_food_rfid_value_2.setText(str(data))
 
-    def rfid_update_uid(self, data):
+    def food_rfid_update_uid(self, data):
         self.ui.label_food_rfid_value.setText(data)
 
     def weight_update_date(self, data):
@@ -101,24 +105,24 @@ class MainWindow(QtWidgets.QMainWindow):
     def weight_update_value(self, data):
         self.ui.label_weight_value.setText(str(data))
     
-    def update_table(self, obj):
-        self.table_model.append(obj)
+    def food_update_table(self, obj):
+        self.table_food_model.append(obj)
 
-        if (len(self.table_model) > 10):
-            self.table_model.pop(0)
+        if (len(self.table_food_model) > 10):
+            self.table_food_model.pop(0)
 
-        reversed_arr = self.table_model[::-1]
+        reversed_arr = self.table_food_model[::-1]
 
         for i,obj in enumerate(reversed_arr):
             in_time = QtGui.QStandardItem(obj.in_time)
             out_time = QtGui.QStandardItem(obj.out_time)
             tag_id = QtGui.QStandardItem(obj.tag_id)
             eat_val = QtGui.QStandardItem(obj.eat_val)
-            self.model.setItem(i,0,tag_id)
-            self.model.setItem(i,1,in_time)
-            self.model.setItem(i,2,out_time)
-            self.model.setItem(i,3,eat_val)
-        self.ui.tableView.setModel(self.model)
+            self.food_model.setItem(i,0,tag_id)
+            self.food_model.setItem(i,1,in_time)
+            self.food_model.setItem(i,2,out_time)
+            self.food_model.setItem(i,3,eat_val)
+        self.ui.tableView.setModel(self.food_model)
 
 class PigData():
     in_time = None

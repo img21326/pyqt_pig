@@ -125,7 +125,7 @@
       <string>UID:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_rfid_value">
+    <widget class="QLabel" name="label_food_rfid_value">
      <property name="geometry">
       <rect>
        <x>60</x>
@@ -151,7 +151,7 @@
       <string>CountTime:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_rfid_value_2">
+    <widget class="QLabel" name="label_food_rfid_value_2">
      <property name="geometry">
       <rect>
        <x>140</x>
@@ -232,7 +232,7 @@
       <string>Value:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_weight_datetime_2">
+    <widget class="QLabel" name="label_water_datetime">
      <property name="geometry">
       <rect>
        <x>120</x>
@@ -245,7 +245,7 @@
       <string>Waiting</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_weight_value_2">
+    <widget class="QLabel" name="label_water_value">
      <property name="geometry">
       <rect>
        <x>120</x>
@@ -296,7 +296,7 @@
       <string>UID:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_rfid_value_3">
+    <widget class="QLabel" name="label_water_rfid_value">
      <property name="geometry">
       <rect>
        <x>60</x>
@@ -322,7 +322,7 @@
       <string>CountTime:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_rfid_value_4">
+    <widget class="QLabel" name="label_water_rfid_value_2">
      <property name="geometry">
       <rect>
        <x>140</x>

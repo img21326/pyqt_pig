@@ -18,9 +18,9 @@ class Config():
     WEIGHT_PORT = None
     WEIGHT_IP = None
     WEIGHT_COM = None
-    RFID_IP = None
-    RFID_PORT = None
-    RFID_COM = None
+    FOOD_RFID_IP = None
+    FOOD_RFID_PORT = None
+    FOOD_RFID_COM = None
 
     logging = None
 
@@ -31,12 +31,12 @@ class Config():
             self.API_URL = config['CONFIG']['API_URL']
             self.LOG_FILE = config['CONFIG']['LOG_FILE']
             self.LOG_LEVEL = config['CONFIG']['LOG_LEVEL']
-            self.WEIGHT_PORT = config['CONFIG']['WEIGHT_PORT']
-            self.WEIGHT_IP = config['CONFIG']['WEIGHT_IP']
-            self.WEIGHT_COM = config['CONFIG']['WEIGHT_COM']
-            self.RFID_IP = config['CONFIG']['RFID_IP']
-            self.RFID_PORT = config['CONFIG']['RFID_PORT']
-            self.RFID_COM = config['CONFIG']['RFID_COM']
+            self.WEIGHT_PORT = config['FOOD']['WEIGHT_PORT']
+            self.WEIGHT_IP = config['FOOD']['WEIGHT_IP']
+            self.WEIGHT_COM = config['FOOD']['WEIGHT_COM']
+            self.FOOD_RFID_IP = config['FOOD']['RFID_IP']
+            self.FOOD_RFID_PORT = config['FOOD']['RFID_PORT']
+            self.FOOD_RFID_COM = config['FOOD']['RFID_COM']
 
             
             log('debug', 'start config success')
@@ -65,19 +65,19 @@ class MainWindow(QtWidgets.QMainWindow):
         config = Config.get_instance()
         self.weight_device = Weight_Device(
             ip=config.WEIGHT_IP, port=config.WEIGHT_PORT, com=config.WEIGHT_COM)
-        self.rfid_device = RFID(
-            ip=config.RFID_IP, port=config.RFID_PORT, com=config.RFID_COM)
+        self.food_rfid_device = RFID(
+            ip=config.FOOD_RFID_IP, port=config.FOOD_RFID_PORT, com=config.FOOD_RFID_COM)
 
-        if (self.weight_device.connect_serial() and self.rfid_device.connect_serial()):
+        if (self.weight_device.connect_serial() and self.food_rfid_device.connect_serial()):
             self.weight_device.close()
-            self.rfid_device.close()
+            self.food_rfid_device.close()
         else:
             log('error', "can't connect device with serials!")
             print("Connect Device Error!")
             
 
-        self.main_work_thread = MianWorkThread(
-            self.weight_device, self.rfid_device)
+        self.main_work_thread = FoodWorkThread(
+            self.weight_device, self.food_rfid_device)
         self.main_work_thread.update_uid.connect(self.rfid_update_uid)
         self.main_work_thread.update_count.connect(self.rfid_update_count)
         self.main_work_thread.update_val.connect(self.weight_update_value)
@@ -90,10 +90,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.weight_listen_thread.start()
 
     def rfid_update_count(self, data):
-        self.ui.label_rfid_value_2.setText(str(data))
+        self.ui.label_food_rfid_value_2.setText(str(data))
 
     def rfid_update_uid(self, data):
-        self.ui.label_rfid_value.setText(data)
+        self.ui.label_food_rfid_value.setText(data)
 
     def weight_update_date(self, data):
         self.ui.label_weight_datetime.setText(data)
@@ -126,7 +126,7 @@ class PigData():
     eat_val = None
     tag_id = None
 
-class MianWorkThread(QtCore.QThread):
+class FoodWorkThread(QtCore.QThread):
     # weight
     update_date = QtCore.pyqtSignal(str)
     update_val = QtCore.pyqtSignal(int)
@@ -140,16 +140,16 @@ class MianWorkThread(QtCore.QThread):
 
     # device
     weight_device = None
-    rfid_device = None
+    food_rfid_device = None
 
     # tread
     rfid_thread = None
     weight_thread = None
 
-    def __init__(self, weight_device, rfid_device):
+    def __init__(self, weight_device, food_rfid_device):
         QtCore.QThread.__init__(self)
         self.weight_device = weight_device
-        self.rfid_device = rfid_device
+        self.food_rfid_device = food_rfid_device
 
     def __del__(self):
         self.wait()
@@ -164,23 +164,23 @@ class MianWorkThread(QtCore.QThread):
         pig_data = None
 
         while True:
-            self.update_uid.emit(self.rfid_device.update_uid)
-            self.update_count.emit(self.rfid_device.update_count)
-            # print(self.rfid_device.update_uid)
+            self.update_uid.emit(self.food_rfid_device.update_uid)
+            self.update_count.emit(self.food_rfid_device.update_count)
+            # print(self.food_rfid_device.update_uid)
 
-            if ((self.rfid_device.update_uid != "None" and self.rfid_device.update_uid != None) and pig_data == None): # 刷入
+            if ((self.food_rfid_device.update_uid != "None" and self.food_rfid_device.update_uid != None) and pig_data == None): # 刷入
                 pig_data = PigData()
                 pig_data.in_time = dt.datetime.now().strftime("%H:%M:%S")
-                pig_data.tag_id = self.rfid_device.update_uid
+                pig_data.tag_id = self.food_rfid_device.update_uid
 
                 log('info', "get inside uid:" + str(pig_data.tag_id))
 
             change_pig = False
             if (pig_data != None):
-                if (pig_data.tag_id != self.rfid_device.update_uid):
+                if (pig_data.tag_id != self.food_rfid_device.update_uid):
                     change_pig = True
                 
-            if ((self.rfid_device.update_uid == "None" or change_pig) and pig_data != None): # 刷出
+            if ((self.food_rfid_device.update_uid == "None" or change_pig) and pig_data != None): # 刷出
                 pig_data.out_time = dt.datetime.now().strftime("%H:%M:%S")
                 pig_data.eat_val = str(self.weight_device.device_val)
                 self.update_table.emit(pig_data)
@@ -198,7 +198,7 @@ class MianWorkThread(QtCore.QThread):
 
     def run_rfid_thread(self):
         try:
-            self.rfid_device.listen()
+            self.food_rfid_device.listen()
         except Exception as e:
             log('error', "RFID Listen Error:" + str(e))
             pass

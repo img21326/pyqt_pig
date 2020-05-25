@@ -51,7 +51,7 @@ class RFID(Device):
 
             self.get_card()
             log('debug', "get card code:" + self.update_uid)
-            time.sleep(0.5)
+            time.sleep(0.05)
 
 
 if __name__ == "__main__":

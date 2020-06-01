@@ -38,7 +38,10 @@ class Config():
             self.FOOD_RFID_PORT = config['FOOD']['RFID_PORT']
             self.FOOD_RFID_COM = config['FOOD']['RFID_COM']
 
-            
+            self.WATER_RFID_IP = config['WATER']['RFID_IP']
+            self.WATER_RFID_PORT = config['WATER']['RFID_PORT']
+            self.WATER_RFID_COM = config['WATER']['RFID_COM']
+
             log('debug', 'start config success')
 
         except:
@@ -70,11 +73,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.weight_device = Weight_Device(
             ip=config.WEIGHT_IP, port=config.WEIGHT_PORT, com=config.WEIGHT_COM)
         self.food_rfid_device = RFID(
-            ip=config.FOOD_RFID_IP, port=config.FOOD_RFID_PORT, com=config.FOOD_RFID_COM)
+            ip=config.FOOD_RFID_IP, port=config.FOOD_RFID_PORT, com=config.FOOD_RFID_COM, name="FOOD_RFID")
+        
+        self.water_rfid_device = RFID(
+            ip=config.WATER_RFID_IP, port=config.WATER_RFID_PORT, com=config.WATER_RFID_COM, name="WARTER_RFID")
 
-        if (self.weight_device.connect_serial() and self.food_rfid_device.connect_serial()):
+        print("WATER RFID Connect status:" + str(self.water_rfid_device.connect_serial()))
+
+        if (self.weight_device.connect_serial() and self.food_rfid_device.connect_serial() and self.water_rfid_device.connect_serial()):
             self.weight_device.close()
             self.food_rfid_device.close()
+            self.water_rfid_device.close()
         else:
             log('error', "can't connect device with serials!")
             print("Connect Device Error!")
@@ -92,6 +101,13 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.weight_listen_thread.update_date.connect(self.weight_update_date)
         # self.weight_listen_thread.update_val.connect(self.weight_update_value)
         # self.weight_listen_thread.start()
+
+        self.water_worker_thread = WaterWorkThread(
+            self.water_rfid_device
+        )
+        self.water_worker_thread.update_uid.connect(self.water_rfid_update_uid)
+        self.water_worker_thread.update_count.connect(self.water_rfid_update_count)
+        self.water_worker_thread.start()
 
     def food_rfid_update_count(self, data):
         self.ui.label_food_rfid_value_2.setText(str(data))
@@ -123,6 +139,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.food_model.setItem(i,2,out_time)
             self.food_model.setItem(i,3,eat_val)
         self.ui.tableView.setModel(self.food_model)
+
+    def water_rfid_update_count(self, data):
+        self.ui.label_water_rfid_value_2.setText(str(data))
+    def water_rfid_update_uid(self,data):
+        self.ui.label_water_rfid_value.setText(data)
 
 class PigData():
     in_time = None
@@ -204,7 +225,7 @@ class FoodWorkThread(QtCore.QThread):
         try:
             self.food_rfid_device.listen()
         except Exception as e:
-            log('error', "RFID Listen Error:" + str(e))
+            log('error', "FOOD RFID Listen Error:" + str(e))
             pass
 
     def run_weight_thread(self):
@@ -212,6 +233,36 @@ class FoodWorkThread(QtCore.QThread):
             self.weight_device.listen()
         except Exception as e:
             log('error', "Weight Listen Error:" + str(e))
+
+class WaterWorkThread(QtCore.QThread):
+    # rfid
+    update_count = QtCore.pyqtSignal(int)
+    update_uid = QtCore.pyqtSignal(str)
+
+    def __init__(self,rfid_device):
+        QtCore.QThread.__init__(self)
+        self.rfid_device = rfid_device
+
+    def __del__(self):
+        self.wait()
+    
+    def run(self):
+        self.rfid_thread = threading.Thread(target=self.run_rfid_thread)
+        self.rfid_thread.start()
+
+        while True:
+            self.update_uid.emit(self.rfid_device.update_uid)
+            self.update_count.emit(self.rfid_device.update_count)
+            time.sleep(1)
+
+ 
+
+    def run_rfid_thread(self):
+        try:
+            self.rfid_device.listen()
+        except Exception as e:
+            log('error', "WATER RFID Listen Error:" + str(e))
+            pass
 
 
 if __name__ == '__main__':

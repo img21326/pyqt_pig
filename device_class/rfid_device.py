@@ -1,12 +1,10 @@
 import serial
 import time
 from PyQt5 import QtCore
-from logs.logger import log
 try:
     from device_class.device import Device
 except:
     from device import Device
-
 
 class RFID(Device):
 
@@ -16,13 +14,19 @@ class RFID(Device):
     update_count = 0
     update_uid = None
 
+    name = ""
+
+    def __init__(self, ip=None, port=None, com=None, name=None):
+        super().__init__(ip=ip, port=port, com=com)
+        self.name = name
+
     def get_version(self):
         r = self.write(self.VER_COMMAND)
         return r
 
     def get_card(self):
         r = self.write(self.READ_COMMAND)
-        print(r)
+        # print(r)
         if (len(r) == 4):
             self.update_uid = "None"
             self.update_count = 0
@@ -44,28 +48,13 @@ class RFID(Device):
     def listen(self):
         while True:
             if self.connect_serial() == False:
-                log('error', "not connect to rfid device!")
-                print("not connect to rfid device!")
+                log('error', self.name + ": not connect to rfid device!")
+                print(self.name + ": not connect to rfid device!")
                 time.sleep(3)
                 continue
 
             self.get_card()
-            log('debug', "get card code:" + self.update_uid)
+            log('debug', self.name + ": get card code:" + self.update_uid)
             time.sleep(0.05)
 
 
-if __name__ == "__main__":
-    import sys
-    try:
-        com = sys.argv[1]
-    except:
-        com = None
-    rfid = RFID(ip='', port='', com=com)
-    if rfid.connect_serial():
-        print("RFID VERSION:")
-        print(rfid.get_version())
-
-        print("RFID READ CARD:")
-        print(rfid.get_card())
-
-        rfid.close()

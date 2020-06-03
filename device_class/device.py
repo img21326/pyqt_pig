@@ -40,10 +40,13 @@ class Device():
         else:
             return False
 
-    def write(self, command):
+    def write(self, command, sleep = 0.5):
         self.serial.write(command)
-        time.sleep(1)
+        time.sleep(sleep)
         r = []
+        if (not self.serial.in_waiting > 0) :
+            print("no return data")
+            return r
         while self.serial.in_waiting:
             r.append(self.serial.read())
         return r

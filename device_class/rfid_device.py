@@ -1,6 +1,5 @@
 import serial
 import time
-from PyQt5 import QtCore
 try:
     from device_class.device import Device
 except:

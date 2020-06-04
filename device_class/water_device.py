@@ -13,7 +13,7 @@ class Water(Device):
     def get_value(self):
         if self.connect_serial():
             r = self.write(self.READ_COMMAND, 2.8)
-            print(r)
+            # print(r)
             r = r[30:]
             r = r[:26]
 
@@ -59,3 +59,7 @@ class Water(Device):
             ixval = float(sxval) * (10 ** ixop)
 
             return ival - ixval
+        else:
+            log('error', "WATER_DEVICE: not connect device")
+            print("WATER_DEVICE: not connect device")
+            return None

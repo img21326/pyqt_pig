@@ -1,7 +1,5 @@
 import logging
 import configparser
-
-
 def instance_logger():
     try:
         config = configparser.ConfigParser()

@@ -1,4 +1,10 @@
-certifi==2020.4.5.1
-PyQt5==5.14.2
-PyQt5-sip==12.7.2
+autopep8==1.5.3
+click==7.1.2
+minimalmodbus==1.0.2
+prompt-toolkit==3.0.5
+pycodestyle==2.6.0
 pyserial==3.4
+six==1.11.0
+toml==0.10.1
+tqdm==4.46.0
+wcwidth==0.1.9

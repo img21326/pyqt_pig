@@ -1,0 +1,10 @@
+version: '3'
+services:
+  iot:
+    build: .
+    restart: always
+    volumes:
+        - .:/usr/src/app
+    devices: 
+        - /dev/tty.usbmodem201201011:/dev/tty.usbmodem201201011
+        - /dev/tty.usbserial:/dev/tty.usbserial

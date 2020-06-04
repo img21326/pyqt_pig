@@ -59,7 +59,6 @@ $ python3 main.py
 ##  Features
 
  - [ ] API Connection
- - [ ] RFID Reader sometime can't scan the card
- - [ ] Complete process
+ - [x] Complete process
  - [x] Weight Device data lag
  - [x] Add Log

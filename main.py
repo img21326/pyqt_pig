@@ -184,8 +184,6 @@ class Main():
                 water_pig_data = None
             time.sleep(0.001)
 
-
-
     def water_rfid_listen(self):
         try:
             self.water_rfid.listen()

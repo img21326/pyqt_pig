@@ -45,7 +45,7 @@ class Device():
         time.sleep(sleep)
         r = []
         if (not self.serial.in_waiting > 0) :
-            print("no return data")
+            # print("no return data")
             return r
         while self.serial.in_waiting:
             r.append(self.serial.read())

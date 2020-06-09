@@ -6,6 +6,7 @@ from logs.logger import log
 import threading
 import time
 import datetime as dt
+import os
 
 
 class PigData():
@@ -33,21 +34,26 @@ class Main():
     def __init__(self):
         self.config = Config.get_instance()
 
-        self.food_rfid = RFID(
-            ip=self.config.FOOD_RFID_IP, port=self.config.FOOD_RFID_PORT, com=self.config.FOOD_RFID_COM, name="FOOD_RFID")
-        self.food_device = Weight_Device(
-            ip=self.config.WEIGHT_IP, port=self.config.WEIGHT_PORT, com=self.config.WEIGHT_COM)
+        mode = os.getenv('MODE')
 
-        self.water_rfid = RFID(
-            ip=self.config.WATER_RFID_IP, port=self.config.WATER_RFID_PORT, com=self.config.WATER_RFID_COM, name="WARTER_RFID")
-        self.water_device = Water(
-            ip=self.config.WATER_IP, port=self.config.WATER_PORT, com=self.config.WATER_COM)
+        print("Start with mode:" + str(mode))
 
-        self.checkDevice()
+        if mode == 'FOOD':
+            self.food_rfid = RFID(
+                ip=self.config.FOOD_RFID_IP, port=self.config.FOOD_RFID_PORT, com=self.config.FOOD_RFID_COM, name="FOOD_RFID")
+            self.food_device = Weight_Device(
+                ip=self.config.WEIGHT_IP, port=self.config.WEIGHT_PORT, com=self.config.WEIGHT_COM)
+            self.start_food_threads()
+            
+        if mode == 'WATER':
+            self.water_rfid = RFID(
+                ip=self.config.WATER_RFID_IP, port=self.config.WATER_RFID_PORT, com=self.config.WATER_RFID_COM, name="WARTER_RFID")
+            self.water_device = Water(
+                ip=self.config.WATER_IP, port=self.config.WATER_PORT, com=self.config.WATER_COM)
+            self.start_water_threads()
 
-        self.start_food_threads()
+        # self.checkDevice()
 
-        self.start_water_threads()
 
     def checkDevice(self):
         if (self.food_rfid.connect_serial() and self.food_device.connect_serial() and self.water_rfid.connect_serial() and self.water_device.connect_serial()):
@@ -75,7 +81,8 @@ class Main():
         food_pig_data = None
 
         while True:
-            if ((self.food_rfid.update_uid != "None" and self.food_rfid.update_uid != None) and food_pig_data == None):  # 刷入
+            if ((self.food_rfid.update_uid != "None" and self.food_rfid.update_uid != None and len(self.food_rfid.update_uid) > 0) and food_pig_data == None):  # 刷入
+                print(len(self.food_rfid.update_uid))
                 food_pig_data = PigData()
                 food_pig_data.in_time = dt.datetime.now().strftime("%H:%M:%S")
                 food_pig_data.tag_id = self.food_rfid.update_uid

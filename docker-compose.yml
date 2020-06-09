@@ -5,6 +5,16 @@ services:
     restart: always
     volumes:
         - .:/usr/src/app
-    devices: 
-        - /dev/tty.usbmodem201201011:/dev/tty.usbmodem201201011
-        - /dev/tty.usbserial:/dev/tty.usbserial
+    environment:
+      - PYTHONUNBUFFERED=1
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 150M
+        reservations:
+          cpus: '0.25'
+          memory: 30M
+    # devices: 
+        # - /dev/tty.usbmodem201201011:/dev/tty.usbmodem201201011
+        # - /dev/tty.usbserial:/dev/tty.usbserial

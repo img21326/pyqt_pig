@@ -45,7 +45,7 @@ class Main():
 
         self.checkDevice()
 
-        # self.start_food_threads()
+        self.start_food_threads()
 
         self.start_water_threads()
 

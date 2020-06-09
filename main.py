@@ -122,7 +122,7 @@ class Main():
                 print(logstr)
 
                 food_pig_data = None
-            time.sleep(1)
+            time.sleep(0.1)
 
     def food_rfid_listen(self):
         try:
@@ -184,7 +184,7 @@ class Main():
                 print(logstr)
 
                 water_pig_data = None
-            time.sleep(1)
+            time.sleep(0.1)
 
     def water_rfid_listen(self):
         try:

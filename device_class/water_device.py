@@ -1,5 +1,7 @@
 import serial
 import time
+from logs.logger import log
+
 try:
     from device_class.device import Device
 except:

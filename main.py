@@ -105,6 +105,7 @@ class Main():
                         log('info', logstr)
                         print(logstr)
                         time.sleep(1)
+                time.sleep(3)
 
             change_pig = False
             if (food_pig_data != None):
@@ -121,7 +122,7 @@ class Main():
                 print(logstr)
 
                 food_pig_data = None
-            time.sleep(0.001)
+            time.sleep(1)
 
     def food_rfid_listen(self):
         try:
@@ -166,6 +167,7 @@ class Main():
                     str(water_pig_data.tag_id) + ", water val:"  + str(water_val_last)
                 log('info', logstr)
                 print(logstr)
+                time.sleep(3)
 
             water_change_pig = False
             if (water_pig_data != None):
@@ -182,7 +184,7 @@ class Main():
                 print(logstr)
 
                 water_pig_data = None
-            time.sleep(0.001)
+            time.sleep(1)
 
     def water_rfid_listen(self):
         try:

@@ -88,7 +88,7 @@ class Main():
 
                 waittime = 0
                 while True:
-                    if (waittime > 5):
+                    if (waittime > 3):
                         food_pig_data = None
                         logstr = "[FOOD] wait for adding food TIMEOUT for 5 sec, delete this record"
                         log('info', logstr)
@@ -104,7 +104,7 @@ class Main():
                             str(self.food_device.device_val / 1000) + "g"
                         log('info', logstr)
                         print(logstr)
-                        time.sleep(1)
+                        time.sleep(2.5)
                 time.sleep(3)
 
             change_pig = False
@@ -122,7 +122,7 @@ class Main():
                 print(logstr)
 
                 food_pig_data = None
-            time.sleep(0.1)
+            time.sleep(0.5)
 
     def food_rfid_listen(self):
         try:
@@ -184,7 +184,7 @@ class Main():
                 print(logstr)
 
                 water_pig_data = None
-            time.sleep(0.1)
+            time.sleep(0.5)
 
     def water_rfid_listen(self):
         try:

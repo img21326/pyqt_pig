@@ -1,13 +1,22 @@
-![screenshot](https://raw.githubusercontent.com/img21326/pyqt_pig/master/screenshot.png)
+## Food Thread
+![screenshot](https://github.com/img21326/pyqt_pig/blob/master/screenshot/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202020-06-10%20%E4%B8%8B%E5%8D%884.30.41.png?raw=true)
+
+## Water Thread
+![screenshot](https://github.com/img21326/pyqt_pig/blob/master/screenshot/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202020-06-10%20%E4%B8%8B%E5%8D%884.31.00.png?raw=true)
 
 ## Requirements
 
  - Python3
- - GUI x64 System
- - certifi==2020.4.5.1 
- - PyQt5==5.14.2 
- - PyQt5-sip==12.7.2 
+ - autopep8==1.5.3
+ - click==7.1.2
+ - minimalmodbus==1.0.2
+ - prompt-toolkit==3.0.5
+ - pycodestyle==2.6.0
  - pyserial==3.4
+ - six==1.11.0
+ - toml==0.10.1
+ - tqdm==4.46.0
+ - wcwidth==0.1.9
 
 ## Install
 
@@ -35,15 +44,40 @@ $ vim config.env
 
 ```
 [CONFIG]
-API_URL = (backend api url)
+
+API_URL =
+
 LOG_FILE = log.txt
-LOG_LEVEL = debug|info (choose one)
-WEIGHT_PORT = 
-WEIGHT_IP = 
-WEIGHT_COM = 
-RFID_IP = 
-RFID_PORT = 
-RFID_COM = 
+
+LOG_LEVEL = debug|info
+
+[FOOD]
+
+WEIGHT_PORT =
+
+WEIGHT_IP =
+
+WEIGHT_COM =
+
+RFID_IP =
+
+RFID_PORT =
+
+RFID_COM =
+
+[WATER]
+
+RFID_IP =
+
+RFID_PORT =
+
+RFID_COM =
+
+WATER_IP =
+
+WATER_PORT =
+
+WATER_COM =
 ```
 
  - 如果是透過TCP/IP則輸入PORT與IP
@@ -56,9 +90,18 @@ RFID_COM =
 $ python3 main.py
 ```
 
-##  Features
+##  RUN WITH DOCKER
 
- - [ ] API Connection
- - [x] Complete process
- - [x] Weight Device data lag
- - [x] Add Log
+### setup docker-compose.yml (連結usb設備)
+
+```
+devices:
+- /dev/ttyACM0:/dev/ttyACM0 # RFID
+- /dev/ttyUSB0:/dev/ttyUSB0 # SERIAL ex:water device
+```
+
+### start up
+
+```
+docker-compose up -d
+```

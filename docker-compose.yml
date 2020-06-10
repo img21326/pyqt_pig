@@ -8,14 +8,14 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - MODE=WATER
-    deploy:
-      resources:
-        limits:
-          cpus: '0.8'
-          memory: 150M
-        reservations:
-          cpus: '0.25'
-          memory: 30M
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.8'
+    #       memory: 150M
+    #     reservations:
+    #       cpus: '0.25'
+    #       memory: 30M
     devices: 
       - /dev/ttyACM0:/dev/ttyACM0
       - /dev/ttyUSB0:/dev/ttyUSB0
@@ -27,14 +27,14 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - MODE=FOOD
-    deploy:
-      resources:
-        limits:
-          cpus: '0.8'
-          memory: 150M
-        reservations:
-          cpus: '0.25'
-          memory: 30M
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.8'
+    #       memory: 150M
+    #     reservations:
+    #       cpus: '0.25'
+    #       memory: 30M
     devices:
       - /dev/ttyACM1:/dev/ttyACM1
         # - /dev/tty.usbmodem201201011:/dev/tty.usbmodem201201011

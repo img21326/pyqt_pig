@@ -162,36 +162,41 @@ class Main():
         water_val_last = 0
 
         while True:
-            if ((self.water_rfid.update_uid != "None" and self.water_rfid.update_uid != None) and water_pig_data == None):  # 刷入
-                water_pig_data = PigData()
-                water_pig_data.in_time = dt.datetime.now().strftime("%H:%M:%S")
-                water_pig_data.tag_id = self.water_rfid.update_uid
-                water_pig_data._type = "water"
+            try:
+                if ((self.water_rfid.update_uid != "None" and self.water_rfid.update_uid != None) and water_pig_data == None):  # 刷入
+                    water_pig_data = PigData()
+                    water_pig_data.in_time = dt.datetime.now().strftime("%H:%M:%S")
+                    water_pig_data.tag_id = self.water_rfid.update_uid
+                    water_pig_data._type = "water"
 
-                water_val_last = self.water_device.get_value()
+                    water_val_last = self.water_device.get_value()
 
-                logstr = "[WATER] - get inside - pig uid:" + \
-                    str(water_pig_data.tag_id) + ", water val:"  + str(water_val_last)
-                log('info', logstr)
-                print(logstr)
-                time.sleep(3)
+                    logstr = "[WATER] - get inside - pig uid:" + \
+                        str(water_pig_data.tag_id) + ", water val:"  + str(water_val_last)
+                    log('info', logstr)
+                    print(logstr)
+                    time.sleep(3)
 
-            water_change_pig = False
-            if (water_pig_data != None):
-                if (water_pig_data.tag_id != self.water_rfid.update_uid):
-                    water_change_pig = True
+                water_change_pig = False
+                if (water_pig_data != None):
+                    if (water_pig_data.tag_id != self.water_rfid.update_uid):
+                        water_change_pig = True
 
-            if ((self.water_rfid.update_uid == "None" or water_change_pig) and water_pig_data != None):  # 刷出
-                water_pig_data.out_time = dt.datetime.now().strftime("%H:%M:%S")
-                water_pig_data.val = self.water_device.get_value() - water_val_last
+                if ((self.water_rfid.update_uid == "None" or water_change_pig) and water_pig_data != None):  # 刷出
+                    water_pig_data.out_time = dt.datetime.now().strftime("%H:%M:%S")
+                    water_pig_data.val = self.water_device.get_value() - water_val_last
 
-                logstr = "[WATER] - get outsid - pig uid:" + \
-                    str(water_pig_data.tag_id) + ", drink value: " + str(water_pig_data.val)
-                log('info', logstr)
-                print(logstr)
+                    logstr = "[WATER] - get outsid - pig uid:" + \
+                        str(water_pig_data.tag_id) + ", drink value: " + str(water_pig_data.val)
+                    log('info', logstr)
+                    print(logstr)
 
-                water_pig_data = None
-            time.sleep(0.5)
+                    water_pig_data = None
+                time.sleep(0.5)
+            except Exception as e:
+                print("WATER MAIN Thread Error:")
+                print(str(e))
+                log('error', "WATER MAIN Thread Error" + str(e))
 
     def water_rfid_listen(self):
         try:

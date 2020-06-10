@@ -6,6 +6,7 @@ try:
 except:
     from device import Device
 
+
 class RFID(Device):
 
     VER_COMMAND = [0x02, 0xA4]
@@ -52,14 +53,19 @@ class RFID(Device):
 
     def listen(self):
         while True:
-            if self.connect_serial() == False:
-                log('error', self.name + ": not connect to rfid device!")
-                print(self.name + ": not connect to rfid device!")
-                time.sleep(3)
-                continue
+            try:
 
-            self.get_card()
-            log('debug', self.name + ": get card code:" + self.update_uid)
-            time.sleep(0.3)
+                if self.connect_serial() == False:
+                    log('error', self.name + ": not connect to rfid device!")
+                    print(self.name + ": not connect to rfid device!")
+                    time.sleep(3)
+                    continue
 
+                self.get_card()
+                log('debug', self.name + ": get card code:" + self.update_uid)
+                time.sleep(0.3)
+            except Exception as e:
+                print("RFID READ CARD ERROR:")
+                print(str(e))
+                log('error',  self.name + " RFID Listen Error:" + str(e))
 

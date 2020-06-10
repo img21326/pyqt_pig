@@ -17,25 +17,25 @@ services:
           cpus: '0.25'
           memory: 30M
     devices: 
-      - /dev/tty.usbmodem23:/dev/tty.usbmodem23
-      - /dev/tty.usbserial:/dev/tty.usbserial
-  # food:
-  #   build: .
-  #   restart: always
-  #   volumes:
-  #       - .:/usr/src/app
-  #   environment:
-  #     - PYTHONUNBUFFERED=1
-  #     - MODE=FOOD
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.8'
-  #         memory: 150M
-  #       reservations:
-  #         cpus: '0.25'
-  #         memory: 30M
-  #   devices:
-  #     - /dev/tty.usbmodem201201011:/dev/tty.usbmodem201201011
+      - /dev/ttyACM0:/dev/ttyACM0
+      - /dev/ttyUSB0:/dev/ttyUSB0
+  food:
+    build: .
+    restart: always
+    volumes:
+        - .:/usr/src/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MODE=FOOD
+    deploy:
+      resources:
+        limits:
+          cpus: '0.8'
+          memory: 150M
+        reservations:
+          cpus: '0.25'
+          memory: 30M
+    devices:
+      - /dev/ttyACM1:/dev/ttyACM1
         # - /dev/tty.usbmodem201201011:/dev/tty.usbmodem201201011
         # - /dev/tty.usbserial:/dev/tty.usbserial

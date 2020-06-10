@@ -27,9 +27,9 @@ class RFID(Device):
     def get_card(self):
         r = self.write(self.READ_COMMAND)
         # print(r)
-        if (len(r) == 4):
+        if (len(r) <= 4):
             self.update_uid = "None"
-            self.update_count = 0
+            # self.update_count = 0
             return False
         else:
             s = ''
@@ -38,11 +38,16 @@ class RFID(Device):
                 if ch == '\n' or ord(ch) == 13:
                     continue
                 s = s + ch
-            if self.update_uid == s:
-                self.update_count += 1
-            else:
-                self.update_count = 0
+            # if self.update_uid == s:
+            #     self.update_count += 1
+            # else:
+            #     self.update_count = 0
+            self.update_count += 1
             self.update_uid = s
+
+            if (self.update_count >= 4):
+                self.close()
+
             return s
 
     def listen(self):

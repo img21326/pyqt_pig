@@ -12,6 +12,8 @@ class Water(Device):
 
     READ_COMMAND = [0x2a, 0x00, 0x00, 0x01, 0x00, 0xff, 0x00, 0xff, 0x11, 0xee]
 
+    count = 0
+
     def get_value(self):
         if self.connect_serial():
             r = self.write(self.READ_COMMAND, 2.8)
@@ -59,6 +61,10 @@ class Water(Device):
             
             ixop = int(sxop)
             ixval = float(sxval) * (10 ** ixop)
+
+            self.count += 1
+            if self.count > 5:
+                self.close()
 
             return ival - ixval
         else:

@@ -63,7 +63,7 @@ class RFID(Device):
 
                 self.get_card()
                 log('debug', self.name + ": get card code:" + self.update_uid)
-                time.sleep(0.3)
+                time.sleep(0.001)
             except Exception as e:
                 print("RFID READ CARD ERROR:")
                 print(str(e))

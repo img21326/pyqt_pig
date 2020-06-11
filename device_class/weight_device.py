@@ -18,7 +18,7 @@ class Weight_Device(Device):
         while True:
             if (self.connect_serial() == False):
                 log('error', "FOOD_DEVICE: not connect device")
-                print("FOOD_DEVICE: not connect device")
+                # print("FOOD_DEVICE: not connect device")
                 time.sleep(3)
                 continue
             if not self.serial.in_waiting:

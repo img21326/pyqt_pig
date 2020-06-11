@@ -48,7 +48,7 @@ class RFID(Device):
 
             if (self.update_count >= 4):
                 self.close()
-
+            time.sleep(3.5)
             return s
 
     def listen(self):

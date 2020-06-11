@@ -112,7 +112,6 @@ class Main():
                         log('info', logstr)
                         print(logstr)
                         time.sleep(2.5)
-                time.sleep(3)
 
             change_pig = False
             if (food_pig_data != None):
@@ -129,7 +128,7 @@ class Main():
                 print(logstr)
 
                 food_pig_data = None
-            time.sleep(0.5)
+            time.sleep(0.01)
 
     def food_rfid_listen(self):
         try:
@@ -175,7 +174,6 @@ class Main():
                         str(water_pig_data.tag_id) + ", water val:"  + str(water_val_last)
                     log('info', logstr)
                     print(logstr)
-                    time.sleep(3)
 
                 water_change_pig = False
                 if (water_pig_data != None):
@@ -192,7 +190,7 @@ class Main():
                     print(logstr)
 
                     water_pig_data = None
-                time.sleep(0.5)
+                time.sleep(0.01)
             except Exception as e:
                 print("WATER MAIN Thread Error:")
                 print(str(e))

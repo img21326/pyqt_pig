@@ -4,6 +4,12 @@
 ## Water Thread
 ![screenshot](https://github.com/img21326/pyqt_pig/blob/master/screenshot/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202020-06-10%20%E4%B8%8B%E5%8D%884.31.00.png?raw=true)
 
+## TCP Connect(水量儀485)
+![screenshot](https://github.com/img21326/pyqt_pig/blob/master/screenshot/tcp-sockect-serial.png?raw=true)
+
+## RPI CONNECT TUTORIAL
+![screenshot](https://github.com/img21326/pyqt_pig/blob/master/screenshot/rpi-connect.png?raw=true)
+
 ## Requirements
 
  - Python3

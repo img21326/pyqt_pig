@@ -82,7 +82,7 @@ class Main():
 
         while True:
             if ((self.food_rfid.update_uid != "None" and self.food_rfid.update_uid != None and len(self.food_rfid.update_uid) > 0) and food_pig_data == None):  # 刷入
-                print(len(self.food_rfid.update_uid))
+                # print(len(self.food_rfid.update_uid))
                 food_pig_data = PigData()
                 food_pig_data.in_time = dt.datetime.now().strftime("%H:%M:%S")
                 food_pig_data.tag_id = self.food_rfid.update_uid
@@ -95,7 +95,7 @@ class Main():
 
                 waittime = 0
                 while True:
-                    if (waittime > 3):
+                    if (waittime > 2):
                         food_pig_data = None
                         logstr = "[FOOD] wait for adding food TIMEOUT for 5 sec, delete this record"
                         log('info', logstr)
@@ -128,7 +128,7 @@ class Main():
                 print(logstr)
 
                 food_pig_data = None
-            time.sleep(0.01)
+            time.sleep(0.001)
 
     def food_rfid_listen(self):
         try:
@@ -190,7 +190,7 @@ class Main():
                     print(logstr)
 
                     water_pig_data = None
-                time.sleep(0.01)
+                time.sleep(0.001)
             except Exception as e:
                 print("WATER MAIN Thread Error:")
                 print(str(e))

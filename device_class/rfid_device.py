@@ -48,7 +48,7 @@ class RFID(Device):
 
             if (self.update_count >= 4):
                 self.close()
-            print("get card id" + str(self.update_uid))
+            print(self.name + "scan rfid get card id :" + str(self.update_uid))
             time.sleep(3.5)
             return s
 

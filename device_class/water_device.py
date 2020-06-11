@@ -1,5 +1,7 @@
 import serial
 import time
+from logs.logger import log
+
 try:
     from device_class.device import Device
 except:
@@ -9,6 +11,8 @@ except:
 class Water(Device):
 
     READ_COMMAND = [0x2a, 0x00, 0x00, 0x01, 0x00, 0xff, 0x00, 0xff, 0x11, 0xee]
+
+    count = 0
 
     def get_value(self):
         if self.connect_serial():
@@ -57,6 +61,10 @@ class Water(Device):
             
             ixop = int(sxop)
             ixval = float(sxval) * (10 ** ixop)
+
+            self.count += 1
+            if self.count > 5:
+                self.close()
 
             return ival - ixval
         else:

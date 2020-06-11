@@ -6,6 +6,7 @@ try:
 except:
     from device import Device
 
+
 class RFID(Device):
 
     VER_COMMAND = [0x02, 0xA4]
@@ -27,9 +28,9 @@ class RFID(Device):
     def get_card(self):
         r = self.write(self.READ_COMMAND)
         # print(r)
-        if (len(r) == 4):
+        if (len(r) <= 4):
             self.update_uid = "None"
-            self.update_count = 0
+            # self.update_count = 0
             return False
         else:
             s = ''
@@ -38,23 +39,34 @@ class RFID(Device):
                 if ch == '\n' or ord(ch) == 13:
                     continue
                 s = s + ch
-            if self.update_uid == s:
-                self.update_count += 1
-            else:
-                self.update_count = 0
+            # if self.update_uid == s:
+            #     self.update_count += 1
+            # else:
+            #     self.update_count = 0
+            self.update_count += 1
             self.update_uid = s
+
+            if (self.update_count >= 4):
+                self.close()
+            print(self.name + "scan rfid get card id :" + str(self.update_uid))
+            time.sleep(3.5)
             return s
 
     def listen(self):
         while True:
-            if self.connect_serial() == False:
-                log('error', self.name + ": not connect to rfid device!")
-                print(self.name + ": not connect to rfid device!")
-                time.sleep(3)
-                continue
+            try:
 
-            self.get_card()
-            log('debug', self.name + ": get card code:" + self.update_uid)
-            time.sleep(0.05)
+                if self.connect_serial() == False:
+                    log('error', self.name + ": not connect to rfid device!")
+                    print(self.name + ": not connect to rfid device!")
+                    time.sleep(3)
+                    continue
 
+                self.get_card()
+                log('debug', self.name + ": get card code:" + self.update_uid)
+                time.sleep(0.001)
+            except Exception as e:
+                print("RFID READ CARD ERROR:")
+                print(str(e))
+                log('error',  self.name + " RFID Listen Error:" + str(e))
 

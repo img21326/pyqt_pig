@@ -1,7 +1,4 @@
-## Food Thread
-![screenshot](https://github.com/img21326/pyqt_pig/blob/master/screenshot/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202020-06-10%20%E4%B8%8B%E5%8D%884.30.41.png?raw=true)
-
-## Water Thread
+## Demo
 ![screenshot](https://github.com/img21326/pyqt_pig/blob/master/screenshot/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202020-06-10%20%E4%B8%8B%E5%8D%884.31.00.png?raw=true)
 
 ## TCP Connect(水量儀485)
